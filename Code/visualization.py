@@ -1,23 +1,28 @@
 from pyvis.network import Network
 import pandas as pd
 
+FILTER = 32         #not recommended to go under 8
+TYPE = 'barnes_hut' #set to 'repulsion' to change
+SHOW_EDGES = True   #set to False to turn of edges (only recommended with 'repulsion' method)  
+
+"""
+    visualization.py is used for the Network Graph Visualization of the collected data. 
+    It reads the data, filters the data to only include accounts with the minimum amount of connections set by 'FILTER'
+    Change 'FILTER' and 'TYPE' to change network size and method.
+"""
+
+#### Initiates the network
+
 net = Network(height='100%', width='100%', bgcolor='#222222', font_color='white')
 
-# set the physics layout of the network
-net.barnes_hut()
-#net.repulsion(node_distance=400, spring_length=400)
-data = pd.read_csv('bigfileSA.csv')
 
-def add_value(df: pd.DataFrame, column: str, value: int) -> pd.DataFrame:
-    """Adds a value to the specified column in the DataFrame.
+#### Sets the physics layout of the network
 
-    :param df: DataFrame to be filtered.
-    :param column: Column name that should be frequency filtered.
-    :param value: Value to be added to the column.
-    :return: DataFrame with added value.
-    """
-    df[column] = df[column] + value
-    return df
+if TYPE == 'barnes_hut':
+    net.barnes_hut()
+else:
+    net.repulsion(node_distance=400, spring_length=400)
+
 
 def filter_by_freq(df: pd.DataFrame, column: str, min_freq: int) -> pd.DataFrame:
     """Filters the DataFrame based on the value frequency in the specified column.
@@ -34,48 +39,44 @@ def filter_by_freq(df: pd.DataFrame, column: str, min_freq: int) -> pd.DataFrame
     # Return only rows with value frequency above threshold.
     return df[df[column].isin(frequent_values)]
 
-data = filter_by_freq(data,'screen_name', 32)
 
+#### Read and prepare the data
 
+data = pd.read_csv('network_data.csv')
+data = filter_by_freq(data,'screen_name', FILTER)
 
 sources = data['screen_name']
 targets = data['Target']
 weights = data['Weight']
 
 edge_data = zip(sources, targets, weights)
+
+
+#### Prepare the network
+
 l = []
 for e in edge_data:
     src = e[0]
-    #print(src)
     dst = e[1]
-    #print(dst)
     w = 0.1
-    #print(w)
 
     net.add_node(src, src, title=src)
     l.append(src)
     net.add_node(dst, dst, title=dst, hidden=True)
-    #net.add_edge(src, dst, hidden=True)
-    if dst in l:
-        net.add_edge(src, dst)
-    #net.add_edge(src, dst)
+      
+    if SHOW_EDGES is True:
+        if dst in l:
+            net.add_edge(src, dst)
+    else:
+        net.add_edge(src, dst, hidden=True)
     
-
-
 neighbor_map = net.get_adj_list()
 
-# add neighbor data to node hover data
 for node in net.nodes:
     node['title'] += ' Neighbors:<br>' + '<br>'.join(neighbor_map[node['id']])
     node['value'] = len(neighbor_map[node['id']])*10
 
+#### Export to html
 
-#net.show_buttons(filter_=['physics'])
 net.show_buttons()
-
 net.show('data10_experimental.html')
-
-'''
-    Long und Lat verwenden für Location Map
-'''
-

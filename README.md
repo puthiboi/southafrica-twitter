@@ -23,7 +23,12 @@ To run `userlist.py` & `userlist_fromList.py` it is required to set up an applic
 
 ## Data
 
-Contains two csv File's. <br />
+Contains two CSV File's. <br />
 
 `network_data.csv` contains all the scraped data with `userlist.py` & `userlist_fromList.py`. <br />
 `location_map.csv` contains the filtered data with coordinates for every scraped account.<br />
+
+## Network Graph Visualization HTML
+
+Contains 4 HTML Files representing the networks mentioned in the paper. 
+Opening the files should open a browser window.

@@ -6,6 +6,9 @@ import json
 
 MAX_COUNT = 250
 
+
+#### Import user credentials from credentials.py
+
 try:
     from credentials import consumer_key, consumer_secret, access_token, access_token_secret
 except ModuleNotFoundError:
@@ -14,20 +17,29 @@ except ModuleNotFoundError:
 except ImportError as import_error:
     sys.exit(f'{import_error}\nCheck for spelling.')
 
-# use those defined keys to login to twitter using tweepy
+    
+#### Connect to Twitter API using tweepy
+
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth, wait_on_rate_limit=True)
 
 
-df = pd.read_csv("friendlist.csv")
+### Read and prepare the data collected in step one
+
+df = pd.read_csv("friendlist_VFPlus.csv")
 screen_name_list = df['screen_name'].tolist()
 follower_count = df['friends_count'].tolist()
-
 result = zip(screen_name_list, follower_count)
 
 
 def tweep(screen_name, max_count):
+    """
+        Method to get the Data of all user followed by the given screen_name
+        and add them to a data frame. 
+        Automatically breaks when collected accounts match max_count.
+        Saves the collected data to .csv on disk.
+    """
     friends_list = []
     for friend in tweepy.Cursor(api.get_friends, screen_name=screen_name).items(max_count):
         friends_list.append(friend)
@@ -36,7 +48,7 @@ def tweep(screen_name, max_count):
     for each_json in friends_list:
         my_list_of_dicts.append(each_json._json)
     
-    print(" MY LIST OF DICTS")
+    print("Accounts Scraped")
     print(len(my_list_of_dicts)) 
 
 
@@ -68,13 +80,15 @@ def tweep(screen_name, max_count):
        
         user_json['Target'] = screen_name
         user_json['Weight'] = 1
-        print(" USER JSON")
+        print("JSON SHAPE")
         print(user_json.shape)
         csv_name = screen_name + '.csv'
         user_json.to_csv (csv_name, index = False, header=True)
     
     return user_json
 
+
+#### Execute the 'tweep' method for every account in the given data from step one.
 
 for x in result:
     if x[1] == 0:
@@ -83,5 +97,8 @@ for x in result:
         user_json = tweep(x[0], MAX_COUNT)
         user_json.to_csv (x[0] + '.csv', index = False, header=True)         
         df = pd.concat([df, user_json], ignore_index = True, axis = 0)
+
+        
+#### Save to .csv File
 
 df.to_csv ('final.csv', index = False, header=True)

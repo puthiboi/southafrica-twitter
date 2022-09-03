@@ -11,7 +11,7 @@ chmod +x ./setup.sh
 ./setup.sh
 ```
 
-To Run `userlist.py` & `userlist_fromList.py` it is required to set up an application on the Twitter Development Platform and create input your credentials in `credentials.py`.
+To run `userlist.py` & `userlist_fromList.py` it is required to set up an application on the Twitter Development Platform and create input your credentials in `credentials.py`.
 
 ### Usage
 

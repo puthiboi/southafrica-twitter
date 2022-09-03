@@ -6,6 +6,13 @@ import json
 
 MAX_COUNT = 250
 
+"""
+    !!! IT IS NOT RECOMMENDED TO RUN THIS SCRIPT. EXECUTION TAKES UP TO TWO WEEKS !!!
+    
+    userlist_fromList.py is used for the second step of the data collection.
+    It connects to the Twitter API and scrapes the friend data for every account collected in step one.
+    It stores certain features of the collected data in a .csv file on disk for every account.
+"""
 
 #### Import user credentials from credentials.py
 

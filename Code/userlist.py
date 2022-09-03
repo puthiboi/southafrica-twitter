@@ -6,6 +6,14 @@ import pandas as pd
 import time
 import json
 
+"""
+    userlist.py is used for the first step of the data collection.
+    It connects to the Twitter API and scrapes the data for every account followed by VFPlus.
+    It stores certain features of the collected data in a .csv file on disk.
+"""
+
+#### Import user credentials from credentials.py
+
 try:
     from credentials import consumer_key, consumer_secret, access_token, access_token_secret
 except ModuleNotFoundError:
@@ -14,17 +22,19 @@ except ModuleNotFoundError:
 except ImportError as import_error:
     sys.exit(f'{import_error}\nCheck for spelling.')
 
-# use those defined keys to login to twitter using tweepy
+    
+#### Connect to Twitter API using tweepy
+
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth, wait_on_rate_limit=True)
 
-# get the usernames of all user followed by VFPlus and add them to a csv
+
+#### Get the Data of all user followed by VFPlus and add them to a data frame
 
 friends_list = []
 for friend in tweepy.Cursor(api.get_friends, screen_name="VFPlus").items():
     friends_list.append(friend)
-
 
 my_list_of_dicts = []
 for each_json in friends_list:
@@ -50,7 +60,6 @@ with open('friends_list.txt', encoding='utf-8') as json_file:
                              'description': str(description),
                              'friends_count': int(friends_count)
                             })
-        #print(my_demo_list)
         user_json = pd.DataFrame(my_demo_list, columns = 
                                   ['friend_id', 'name', 
                                    'screen_name', 'location', 
@@ -65,9 +74,10 @@ for user in range(count_row):
 user_json['Target'] = target
 user_json['Weight'] = weight
 
-user_json.to_csv ('friendlist.csv', index = False, header=True)
 
+#### Save to .csv File
 
+user_json.to_csv ('friendlist_VFPlus.csv', index = False, header=True)
 
 '''
 friend.id_str
@@ -76,4 +86,3 @@ friend.screen_name
 friend.location
 friend.description
 '''
-

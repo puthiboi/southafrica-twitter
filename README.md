@@ -13,8 +13,8 @@ chmod +x ./setup.sh
 
 ### Usage
 
-`userlist.py` is used for the first step of the data scraping process. 
-`userlist_fromList.py` is used for the second step of the data scraping process.
-`visualization.py` is used for Network Graph Visualization of the dataset.
-`geo.py` is used to apply coordinates(latitude & longitude) to the dataset. 
-`location_map.ipynb` is used to create a heat map with google maps.
+`userlist.py` is used for the first step of the data scraping process. \n
+`userlist_fromList.py` is used for the second step of the data scraping process.\n
+`visualization.py` is used for Network Graph Visualization of the dataset.\n
+`geo.py` is used to apply coordinates(latitude & longitude) to the dataset. \n
+`location_map.ipynb` is used to create a heat map with google maps.\n

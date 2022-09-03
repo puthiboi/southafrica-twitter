@@ -20,3 +20,11 @@ To run `userlist.py` & `userlist_fromList.py` it is required to set up an applic
 `visualization.py` is used for Network Graph Visualization of the dataset.<br />
 `geo.py` is used to apply coordinates(latitude & longitude) to the dataset. <br />
 `location_map.ipynb` is used to create a heat map with google maps.<br />
+
+## Data
+
+Contains two csv File's. <br />
+<br />
+
+`network_data.csv` contains all the scraped data with `userlist.py` & `userlist_fromList.py`. <br />
+`location_map.csv` contains the filtered data with coordinates for every scraped account.<br />
